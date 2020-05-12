@@ -1,40 +1,26 @@
 import React, { useState } from 'react';
-import { gql, useQuery } from '@apollo/client';
-import Persons from './Persons';
-import PersonForm from './PersonForm';
-import { ALL_PERSONS } from './queries';
-import PhoneForm from './PhoneForm';
+import Authors from './Authors';
+import Books from './Books';
+import NewBook from './NewBook';
 
 const App = () => {
-  const result = useQuery(ALL_PERSONS);
-  const [errorMessage, setErrorMessage] = useState(null);
-
-  if (result.loading) {
-    return <div>loading...</div>;
-  }
-
-  const notify = (message) => {
-    setErrorMessage(message);
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, 10000);
-  };
+  const [page, setPage] = useState('authors');
 
   return (
     <div>
-      <Notify errorMessage={errorMessage} />
-      <Persons persons={result.data.allPersons} />
-      <PersonForm setError={notify} />
-      <PhoneForm setError={notify} />
+      <div>
+        <button onClick={() => setPage('authors')}>authors</button>
+        <button onClick={() => setPage('books')}>books</button>
+        <button onClick={() => setPage('add')}>add book</button>
+      </div>
+
+      <Authors show={page === 'authors'} />
+
+      <Books show={page === 'books'} />
+
+      <NewBook show={page === 'add'} />
     </div>
   );
-};
-
-const Notify = ({ errorMessage }) => {
-  if (!errorMessage) {
-    return null;
-  }
-  return <div style={{ color: 'red' }}>{errorMessage}</div>;
 };
 
 export default App;
